@@ -188,6 +188,21 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampMixin):
         verbose_name=_("Is Staff"),
         help_text="Grants Django admin access.",
     )
+    class PlatformRole(models.TextChoices):
+        SUPER_ADMIN = "SUPER_ADMIN", _("Super Admin")
+        PLATFORM_SUPPORT = "PLATFORM_SUPPORT", _("Platform Support")
+        PLATFORM_OPERATOR = "PLATFORM_OPERATOR", _("Platform Operator")
+        DEVOPS = "DEVOPS", _("DevOps")
+        SECURITY_ENGINEER = "SECURITY_ENGINEER", _("Security Engineer")
+
+    platform_role = models.CharField(
+        max_length=32,
+        choices=PlatformRole.choices,
+        null=True,
+        blank=True,
+        verbose_name=_("Platform Role"),
+        help_text="Internal KAVAN platform role. Null = standard tenant user.",
+    )
 
     # ---- MFA ----
     mfa_enabled = models.BooleanField(

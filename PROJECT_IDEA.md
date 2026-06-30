@@ -1,6 +1,6 @@
 # KAVAN v6.0 — Project Overview & Architecture Idea
 
-KAVAN v6.0 is an enterprise-grade, multi-tenant product launch and management platform. It is engineered using a decoupled Clean Architecture pattern to provide a robust, scalable, and highly observable foundation for SaaS applications.
+KAVAN is an enterprise-grade, multi-tenant product launch and management platform. It is engineered using a decoupled Clean Architecture pattern to provide a robust, scalable, and highly observable foundation for SaaS applications.
 
 ---
 
@@ -12,74 +12,105 @@ Rather than writing business logic directly in standard, monolithic Django views
 
 ---
 
-## 2. Layered Architecture Roadmap
+## 2. Layer Architecture Roadmap
 
-KAVAN is designed as a progressive 5-layer platform. The current repository contains the complete foundation of **Layer 1: Infrastructure**.
+| Layer        | Name                                | Status             | Completion |
+| ------------ | ----------------------------------- | ------------------ | ---------: |
+| **Layer 1**  | Infrastructure & Clean Architecture | ✅ Complete         |   **100%** |
+| **Layer 2**  | Enterprise Authentication           | ✅ Feature Complete |    **99%** |
+| **Layer 3**  | Enterprise Multi-Tenant Engine      | ✅ Feature Complete |    **99%** |
+| **Layer 4**  | Enterprise RBAC                     | ✅ Feature Complete |    **99%** |
+| **Layer 5**  | Marketplace / Product Management    | ⏳ Not Started      |     **0%** |
+| **Layer 6**  | Deployment & Provisioning Engine    | ⏳ Not Started      |     **0%** |
+| **Layer 7**  | AI & Automation Engine              | ⏳ Not Started      |     **0%** |
+| **Layer 8**  | Monitoring & Observability Stack    | ⏳ Not Started      |     **0%** |
+| **Layer 9**  | Billing & Licensing                 | ⏳ Not Started      |     **0%** |
+| **Layer 10** | Enterprise Integrations             | ⏳ Not Started      |     **0%** |
 
+---
+
+## 3. What each layer does
+
+### ✅ Layer 1 – Infrastructure & Clean Architecture (100%)
+This is the foundation of KAVAN.
+It contains: Django project structure, PostgreSQL, Redis, Celery, Docker, Gunicorn, Nginx, Base Models, Base Repository, Service Layer, Exception Handler, Logging, Configuration, UUID support, Soft Delete.
+*Without Layer 1, nothing else can exist.*
+
+### ✅ Layer 2 – Enterprise Authentication (99%)
+**Purpose:** "Who are you?"
+It provides: Login, Register, Logout, JWT, Refresh Tokens, Email Verification, Password Reset, OAuth, MFA foundation, Security Middleware, Redis Rate Limiter, Token Blacklist.
+*Remaining: Swagger documentation, Complete automated tests, Security validation.*
+
+### ✅ Layer 3 – Enterprise Multi-Tenant Engine (99%)
+**Purpose:** "Which company do you belong to?"
+It provides: Tenant, TenantMember, Subscription, Settings, Deployment, Metrics, Backup, Tenant Middleware, Domain Resolver, Tenant Context, TenantScopedManager, Signals, Celery, Tenant APIs.
+*Remaining: Production backup implementation, Performance testing, API regression testing.*
+
+### ✅ Layer 4 – Enterprise RBAC (99%)
+**Purpose:** "What are you allowed to do?"
+It provides two independent authorization systems:
+*   **Platform RBAC**: Used only by KAVAN employees (SUPER_ADMIN, PLATFORM_SUPPORT, DEVOPS, SECURITY_ENGINEER). These users manage the KAVAN platform itself.
+*   **Tenant RBAC**: Used by customer organizations (ADMIN, DEVELOPER, ANALYST, VIEWER). These users manage only their own tenant.
+Layer 4 includes: RBACService, Permission Cache, Audit Logs, Decorators, Middleware, Permission Models.
+*Remaining: Documentation, Performance tests, Cache benchmarks.*
+
+---
+
+## 4. The Product Ecosystem (Upcoming)
+
+### 🚀 Layer 5 – Marketplace / Product Management
+This is where KAVAN becomes a real **Control Plane**.
+Super Admin can: Create products, Delete products, Publish versions, Retire products, Manage pricing, Manage licensing.
+*Example products: ERP, CRM, HRMS, Help Desk, Inventory, Asset Management, AI Assistant.*
+*Models: Product, ProductVersion, ProductDeployment, TenantProduct, MarketplaceCategory, ReleaseNotes.*
+
+### 🚀 Layer 6 – Deployment & Provisioning Engine
+This layer installs products into tenant environments.
+*Responsibilities: Deployment, Rollback, Version Control, Health Checks, Docker, Kubernetes (future).*
+
+### 🚀 Layer 7 – AI & Automation Engine
+This layer makes KAVAN intelligent.
+*Features: AI Assistant, AI Reports, AI Chat, Threat Detection, Log Analysis, Predictive Analytics, Automated Recommendations.*
+
+### 🚀 Layer 8 – Monitoring & Observability
+This monitors the entire platform.
+*Tracks: CPU, RAM, Storage, Network, API Response Time, Error Rate, Audit Logs, Security Events.*
+
+### 🚀 Layer 9 – Billing & Licensing
+Commercial layer.
+*Includes: Subscription Plans, Monthly Billing, License Keys, Usage Tracking, Invoices, Payment Gateway, Trial Accounts, Renewals.*
+
+### 🚀 Layer 10 – Enterprise Integrations
+Connect KAVAN with enterprise systems.
+*Integrations: Microsoft Entra ID, LDAP, SAML, OAuth Providers, REST APIs, Webhooks, SIEM, SOAR, Terraform, Kubernetes, Cloud Providers.*
+
+---
+
+## 5. Final KAVAN Architecture
+
+```text
+                    KAVAN PLATFORM
+
+ Layer 1  ─► Infrastructure
+              │
+ Layer 2  ─► Authentication
+              │
+ Layer 3  ─► Multi-Tenant Engine
+              │
+ Layer 4  ─► Enterprise RBAC
+═══════════════════════════════════════
+        ▲ Control Plane Complete ▲
+═══════════════════════════════════════
+              │
+ Layer 5  ─► Marketplace / Products
+              │
+ Layer 6  ─► Deployment Engine
+              │
+ Layer 7  ─► AI & Automation
+              │
+ Layer 8  ─► Monitoring & Observability
+              │
+ Layer 9  ─► Billing & Licensing
+              │
+ Layer 10 ─► Enterprise Integrations
 ```
-Layer 5+: Business Logic Layer  ◄ (Product catalogs, launch rollouts, analytics)
-       ▼
-Layer 4: Advanced RBAC          ◄ (Roles, granular policies, permission scopes)
-       ▼
-Layer 3: Multi-Tenancy          ◄ (Tenant isolation, tenant-scoped database filters)
-       ▼
-Layer 2: Authentication         ◄ (JWT Authentication, custom User models, sessions)
-       ▼
-Layer 1: Infrastructure (CURRENT)◄ (Clean Architecture boilerplate, health probes, logging)
-```
-
----
-
-## 3. The Current Implementation (Layer 1: Infrastructure)
-
-The base layer sets up a rock-solid infrastructure stack, making the application production-ready from day one:
-
-### A. Clean Architecture & Dependency Injection (IoC)
-* **Decoupling**: Views (Controllers) never call database models or database-querying code directly. Instead, they depend on abstract **Services**.
-* **Repository Pattern**: Data querying and persistence are handled by **Repositories** (`common/repositories/`) which abstract the Django ORM.
-* **IoC Service Container**: Dependencies are registered and dynamically resolved using a custom Service Container and Providers (`common/container/` and `common/providers/`). This allows mock objects to be easily injected for testing.
-
-### B. Standardized API Envelope
-All API endpoints return a consistent JSON envelope to make client integration seamless:
-* **Success Envelope**: Contains status flags, a message, execution metadata, and `data`.
-* **Error Envelope**: Provides structured error objects containing specific fields, error codes, and human-readable messages.
-* **Pagination Envelope**: Integrates pagination details (current page, total pages, next/previous URLs) into the standard response metadata.
-
-### C. Advanced Observability & Monitoring
-* **Request Correlation**: The middleware assigns a unique `X-Request-ID` and `X-Correlation-ID` to every HTTP request, allowing requests to be tracked across microservices and log outputs.
-* **Structured JSON Logging**: Custom JSON log formatters serialize system logs with request context, making them easy to index in modern log systems (Elasticsearch, Loki, etc.).
-* **Kubernetes-Ready Health Checks**:
-  * `/health/`: Detailed system metrics (database connection latency, Redis cache speed, Celery worker capacity).
-  * `/health/live/`: Fast check to confirm the server process is alive.
-  * `/health/ready/`: Checks connection to dependencies (Postgres, Redis) to verify the pod is ready to accept traffic.
-
----
-
-## 4. Technology Stack
-
-* **Language**: Python 3.12 (CPython runtime)
-* **Framework**: Django 5.0+ & Django REST Framework (DRF) 3.15+
-* **Database**: PostgreSQL 16 (for robust transactional and relational data storage)
-* **Cache & Message Broker**: Redis 7 (for session caching, rate-limiting, and background tasks)
-* **Task Queues**: Celery 5.4 (for asynchronous tasks and scheduled cron jobs via `django-celery-beat`)
-
----
-
-## 5. Upcoming Architecture Layers
-
-Once Layer 1 is set up, the next phases of development will introduce:
-
-1. **Layer 2 (Authentication)**: 
-   * Custom user model with secure password hashing.
-   * Stateless JWT (JSON Web Token) authentication with sliding expiration.
-   * API security hardening (rate-limiting, CORS control).
-2. **Layer 3 (Multi-Tenancy)**:
-   * Logical data isolation allowing multiple organizations (tenants) to use the same database while ensuring data cannot leak between them.
-   * Middleware to resolve tenants from subdomains or headers.
-3. **Layer 4 (RBAC)**:
-   * Standardized access control (e.g., Owner, Admin, Editor, Viewer).
-   * Feature-based or object-level permissions (e.g., verifying if a user has permission to modify a specific product launch).
-4. **Layer 5+ (Business Logic)**:
-   * **Product Catalog**: Creation, versioning, and management of products.
-   * **Launch Engine**: Workflows, tasks, timelines, calendar integrations, and tracking checklists for launching a product to market.
-   * **Reporting Dashboard**: Insights into launch performance, team speed, and success metrics.

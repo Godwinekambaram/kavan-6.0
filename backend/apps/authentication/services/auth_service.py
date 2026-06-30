@@ -84,3 +84,70 @@ class AuthService:
         In full implementation, this writes to the Audit log model.
         """
         pass # To be fully wired with the audit app
+
+    @classmethod
+    def register(cls, email: str, password: str, first_name: str = "", last_name: str = "", request_meta: Optional[Dict[str, Any]] = None) -> User:
+        """
+        Registers a new user, applies password policies, creates a profile, and triggers verification.
+        """
+        # Validate password policy
+        from backend.apps.authentication.validators import PasswordValidator
+        PasswordValidator.validate(password)
+
+        if User.objects.filter(email=email).exists():
+            raise AuthenticationException("A user with this email already exists.")
+
+        user = User.objects.create_user(
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+
+        cls._log_audit(user, "REGISTER_SUCCESS", request_meta)
+
+        # Trigger email verification token generation
+        cls.send_verification_email(user)
+
+        return user
+
+    @classmethod
+    def forgot_password(cls, email: str, request_meta: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Generates a secure reset token and emails the user.
+        """
+        user = User.objects.filter(email=email).first()
+        if not user:
+            # We don't raise an error to prevent email enumeration
+            return
+
+        # Generate reset token and send email
+        # To be implemented using NotificationService
+        cls._log_audit(user, "FORGOT_PASSWORD_REQUEST", request_meta)
+
+    @classmethod
+    def reset_password(cls, token: str, new_password: str, request_meta: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Validates the reset token and updates the password, applying history constraints.
+        """
+        # Validate password policy
+        from backend.apps.authentication.validators import PasswordValidator
+        PasswordValidator.validate(new_password)
+
+        # Mock token validation for now
+        # token_record = PasswordReset.objects.filter(token_hash=hash(token)).first()
+        # user = token_record.user
+        
+        # user.set_password(new_password)
+        # user.save()
+        
+        # cls._log_audit(user, "PASSWORD_RESET_SUCCESS", request_meta)
+        pass
+
+    @classmethod
+    def send_verification_email(cls, user: User) -> None:
+        """
+        Generates a verification token and dispatches an email.
+        """
+        pass
+

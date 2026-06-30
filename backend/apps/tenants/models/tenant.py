@@ -43,6 +43,10 @@ class Tenant(BaseModel, SoftDeleteModel):
         related_name='owned_tenants'
     )
     
+    # ---- Managers ----
+    objects = TenantScopedManager()
+    unscoped = UnscopedManager()
+
     class Meta:
         db_table = 'tenants_tenant'
         verbose_name = _('Tenant')

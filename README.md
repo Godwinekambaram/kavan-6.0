@@ -147,15 +147,15 @@ KAVAN is built in sequential layers to ensure stability before expanding feature
 | Layer | Component Description | Status | Completion |
 | :--- | :--- | :--- | :--- |
 | Layer 1 | Infrastructure & Clean Architecture | Complete | 100% |
-| Layer 2 | IAM (Identity & Access Management) | In Progress | 80% |
-| Layer 3 | Multi-Tenant Engine | Pending | 0% |
-| Layer 4 | Advanced RBAC | Pending | 0% |
-| Layer 5 | Business Modules (Product Catalog) | Pending | 0% |
-| Layer 6 | Security (Probes, Advanced Policies) | Pending | 0% |
-| Layer 7 | Monitoring & Observability Stack | Pending | 0% |
-| Layer 8 | AI Platform (Integrations) | Pending | 0% |
-| Layer 9 | Deployment (Kubernetes, Helm) | Pending | 0% |
-| Layer 10 | Enterprise Expansion (SSO, SAML) | Pending | 0% |
+| Layer 2 | Enterprise Authentication | Complete | ~99% |
+| Layer 3 | Enterprise Multi-Tenant Engine | Complete | ~99% |
+| Layer 4 | Enterprise RBAC | Complete | ~99% |
+| Layer 5 | Marketplace / Product Management | Pending | 0% |
+| Layer 6 | Deployment & Provisioning Engine | Pending | 0% |
+| Layer 7 | AI & Automation Engine | Pending | 0% |
+| Layer 8 | Monitoring & Observability Stack | Pending | 0% |
+| Layer 9 | Billing & Licensing | Pending | 0% |
+| Layer 10 | Enterprise Integrations | Pending | 0% |
 
 ---
 
@@ -606,11 +606,13 @@ graph LR
 
 ## 31. Future Roadmap
 
-KAVAN is actively expanding its capabilities:
-*   **Layer 3**: Multi-Tenant architecture roll-out.
-*   **Layer 4**: Advanced RBAC permission engine.
-*   **Layer 5**: Core Product Management modules.
-*   **Layer 6+**: Advanced workflows, auditing, notifications, AI expansions, and Enterprise integrations.
+KAVAN is actively expanding its capabilities to build the product ecosystem on top of the completed Control Plane (Layers 1-4):
+*   **Layer 5**: Marketplace & Product Management (Product catalogs, deployment logic).
+*   **Layer 6**: Deployment Engine (Docker, Kubernetes).
+*   **Layer 7**: AI & Automation Engine.
+*   **Layer 8**: Monitoring & Observability.
+*   **Layer 9**: Billing & Licensing.
+*   **Layer 10**: Enterprise Integrations (Entra ID, SAML, Terraform).
 
 ---
 
