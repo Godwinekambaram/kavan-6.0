@@ -9,10 +9,10 @@ from django.apps import AppConfig
 
 class DeploymentsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.deployments"
+    name = "backend.apps.deployments"
     verbose_name = "Deployment Engine"
     label = "deployments"
 
     def ready(self):
         """Import signals on app load."""
-        import apps.deployments.signals  # noqa: F401
+        import backend.apps.deployments.signals  # noqa: F401

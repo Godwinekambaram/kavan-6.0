@@ -19,9 +19,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from django.db import transaction
-
-from apps.marketplace.models.product import (
+from backend.apps.marketplace.models.product import (
     Product,
     ProductPricing,
     ProductStatus,
@@ -29,14 +27,14 @@ from apps.marketplace.models.product import (
     TenantProduct,
     TenantProductStatus,
 )
-from apps.marketplace.repositories import (
+from backend.apps.marketplace.repositories import (
     ProductPricingRepository,
     ProductRepository,
     ProductVersionRepository,
     TenantProductRepository,
 )
-from common.exceptions.base import KAVANException, ValidationException
-from common.services.base_service import BaseService
+from backend.common.exceptions.base import KAVANException, ValidationException
+from backend.common.services.base_service import BaseService
 
 logger = logging.getLogger("kavan.marketplace.services")
 

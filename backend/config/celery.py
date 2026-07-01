@@ -38,11 +38,12 @@ app.conf.beat_schedule = {
         "schedule": crontab(minute="*/5"),
         "options": {"expires": 60},
     },
-    # Layer 2+ will add more scheduled tasks here
-    # "send-daily-report": {
-    #     "task": "apps.reports.tasks.send_daily_report",
-    #     "schedule": crontab(hour=8, minute=0),
-    # },
+    # Layer 6: Deployment health checks (every 5 minutes)
+    "health-check-all-deployments": {
+        "task": "deployments.health_check_all",
+        "schedule": crontab(minute="*/5"),
+        "options": {"expires": 120},
+    },
 }
 
 app.conf.timezone = "UTC"

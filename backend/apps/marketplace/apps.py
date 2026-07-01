@@ -9,7 +9,7 @@ from django.apps import AppConfig
 
 class MarketplaceConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.marketplace"
+    name = "backend.apps.marketplace"
     verbose_name = "Marketplace"
     label = "marketplace"
 
@@ -17,4 +17,4 @@ class MarketplaceConfig(AppConfig):
         """
         Import signals when the app is fully loaded.
         """
-        import apps.marketplace.signals  # noqa: F401
+        import backend.apps.marketplace.signals  # noqa: F401

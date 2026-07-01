@@ -76,10 +76,14 @@ LOCAL_APPS = [
     "apps.devices.apps.DevicesConfig",
     "apps.mfa.apps.MFAConfig",
     "apps.audit.apps.AuditConfig",
-    # Future layers:
-    # "apps.tenants.apps.TenantsConfig",   # Layer 3
-    # "apps.rbac.apps.RBACConfig",         # Layer 4
-    # "apps.products.apps.ProductsConfig", # Layer 5
+    # ---- Layer 3: Tenant Lifecycle & Isolation ----
+    "backend.apps.tenants.apps.TenantsConfig",
+    # ---- Layer 4: Role-Based Access Control ----
+    "backend.apps.rbac.apps.RbacConfig",
+    # ---- Layer 5: Marketplace & Product Management ----
+    "backend.apps.marketplace.apps.MarketplaceConfig",
+    # ---- Layer 6: Deployment & Provisioning Engine ----
+    "backend.apps.deployments.apps.DeploymentsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -111,11 +115,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Placeholder middleware for future layers (currently pass-through):
-    # "config.middleware.auth.AuthenticationMiddleware",      # Layer 2
-    # "config.middleware.tenant.TenantMiddleware",           # Layer 3
-    # "config.middleware.rbac.RBACMiddleware",               # Layer 4
-    # "config.middleware.audit.AuditMiddleware",             # Layer 2
+    "backend.apps.tenants.middleware.tenant_middleware.TenantMiddleware",
+    "backend.apps.rbac.middleware.RBACMiddleware",
 ]
 
 # ============================================================
